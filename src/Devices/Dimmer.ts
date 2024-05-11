@@ -18,8 +18,7 @@ export class Dimmer extends Common implements Device {
 
         this.service
             .getCharacteristic(this.homebridge.hap.Characteristic.On)
-            .onGet(this.onGetState)
-            .onSet(this.onSetState);
+            .onGet(this.onGetState);
 
         this.service
             .getCharacteristic(this.homebridge.hap.Characteristic.Brightness)
@@ -41,12 +40,6 @@ export class Dimmer extends Common implements Device {
         return this.device.status.state === "On";
     };
 
-    private onSetState = (value: CharacteristicValue): void => {
-        this.log.debug(`Dimmer Set State: ${this.device.name} ${value}`);
-
-        this.device.set({ state: value ? "On" : "Off" });
-    };
-
     private onGetBrightness = (): CharacteristicValue => {
         this.log.debug(`Dimmer Get Brightness: ${this.device.name} ${this.device.status.level}`);
 
@@ -54,8 +47,11 @@ export class Dimmer extends Common implements Device {
     };
 
     private onSetBrightness = (value: CharacteristicValue): void => {
+        const level = (value || 0) as number;
+        const state = level > 0 ? "On" : "Off";
+
         this.log.debug(`Dimmer Set Brightness: ${this.device.name} ${value}`);
 
-        this.device.set({ level: value as number });
+        this.device.set({ state, level });
     };
 }
