@@ -127,9 +127,12 @@ export class Fan extends Common implements Device {
         const whoosh = this.device.status.whoosh || "Off";
         const eco = this.device.status.eco || "Off";
 
-        this.log.debug(`Fan Set Speed: ${this.device.name} ${speed}`);
+        if (this.device.status.state !== state || this.device.status.speed !== speed) {
+            this.log.debug(`Fan Set State: ${this.device.name} ${state}`);
+            this.log.debug(`Fan Set Speed: ${this.device.name} ${speed}`);
 
-        this.device.set({ state, speed, auto, whoosh, eco });
+            this.device.set({ state, speed, auto, whoosh, eco });
+        }
     };
 
     private onGetAuto = (): CharacteristicValue => {
@@ -145,9 +148,11 @@ export class Fan extends Common implements Device {
         const whoosh = this.device.status.whoosh || "Off";
         const eco = this.device.status.eco || "Off";
 
-        this.log.debug(`Fan Set Auto: ${this.device.name} ${auto}`);
+        if (this.device.status.auto !== auto) {
+            this.log.debug(`Fan Set Auto: ${this.device.name} ${auto}`);
 
-        this.device.set({ state, speed, auto, whoosh, eco });
+            this.device.set({ state, speed, auto, whoosh, eco });
+        }
     };
 
     private onGetWhoosh = (): CharacteristicValue => {
@@ -163,9 +168,11 @@ export class Fan extends Common implements Device {
         const whoosh = value ? "On" : "Off";
         const eco = this.device.status.eco || "Off";
 
-        this.log.debug(`Fan Set Whoosh: ${this.device.name} ${whoosh}`);
+        if (this.device.status.whoosh !== whoosh) {
+            this.log.debug(`Fan Set Whoosh: ${this.device.name} ${whoosh}`);
 
-        this.device.set({ state, speed, auto, whoosh, eco });
+            this.device.set({ state, speed, auto, whoosh, eco });
+        }
     };
 
     private onGetEco = (): CharacteristicValue => {
@@ -181,8 +188,10 @@ export class Fan extends Common implements Device {
         const whoosh = this.device.status.whoosh || "Off";
         const eco = value ? "On" : "Off";
 
-        this.log.debug(`Fan Set Eco: ${this.device.name} ${eco}`);
+        if (this.device.status.eco !== eco) {
+            this.log.debug(`Fan Set Eco: ${this.device.name} ${eco}`);
 
-        this.device.set({ state, speed, auto, whoosh, eco });
+            this.device.set({ state, speed, auto, whoosh, eco });
+        }
     };
 }

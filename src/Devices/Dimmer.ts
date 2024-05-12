@@ -52,9 +52,11 @@ export class Dimmer extends Common implements Device {
         const level = ((value || 0) as number) / 100;
         const state = level > 0 ? "On" : "Off";
 
-        this.log.debug(`Dimmer Set State: ${this.device.name} ${state}`);
-        this.log.debug(`Dimmer Set Brightness: ${this.device.name} ${level}`);
+        if (this.device.status.state !== state || this.device.status.level !== level) {
+            this.log.debug(`Dimmer Set State: ${this.device.name} ${state}`);
+            this.log.debug(`Dimmer Set Brightness: ${this.device.name} ${level}`);
 
-        this.device.set({ state, level });
+            this.device.set({ state, level });
+        }
     };
 }
