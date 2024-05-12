@@ -19,7 +19,7 @@ export class Temperature extends Common implements Device {
     }
 
     public onUpdate(state: DeviceState): void {
-        this.log.debug(`Temperature: ${this.device.name} State: ${state.temprature}`);
+        this.log.debug(`Temperature: ${this.device.name} State: ${state.temprature || 0}`);
 
         this.service.updateCharacteristic(
             this.homebridge.hap.Characteristic.CurrentTemperature,
@@ -28,7 +28,7 @@ export class Temperature extends Common implements Device {
     }
 
     private onGetState = (): CharacteristicValue => {
-        this.log.debug(`Temperature Get State: ${this.device.name} ${this.device.status.temprature}`);
+        this.log.debug(`Temperature Get State: ${this.device.name} ${this.device.status.temprature || 0}`);
 
         return this.device.status.temprature || 0;
     };

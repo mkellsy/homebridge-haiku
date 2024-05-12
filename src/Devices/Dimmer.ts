@@ -28,7 +28,7 @@ export class Dimmer extends Common implements Device {
 
     public onUpdate(state: DeviceState): void {
         this.log.debug(`Dimmer: ${this.device.name} State: ${state.state}`);
-        this.log.debug(`Dimmer: ${this.device.name} Brightness: ${state.level}`);
+        this.log.debug(`Dimmer: ${this.device.name} Brightness: ${state.level || 0}`);
 
         this.service.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.state === "On");
         this.service.updateCharacteristic(this.homebridge.hap.Characteristic.Brightness, state.level || 0);
@@ -41,16 +41,19 @@ export class Dimmer extends Common implements Device {
     };
 
     private onGetBrightness = (): CharacteristicValue => {
-        this.log.debug(`Dimmer Get Brightness: ${this.device.name} ${this.device.status.level}`);
+        const level = (this.device.status.level || 0) * 100;
 
-        return this.device.status.level || 0;
+        this.log.debug(`Dimmer Get Brightness: ${this.device.name} ${this.device.status.level || 0}`);
+
+        return level;
     };
 
     private onSetBrightness = (value: CharacteristicValue): void => {
-        const level = (value || 0) as number;
+        const level = ((value || 0) as number) / 100;
         const state = level > 0 ? "On" : "Off";
 
-        this.log.debug(`Dimmer Set Brightness: ${this.device.name} ${value}`);
+        this.log.debug(`Dimmer Set State: ${this.device.name} ${state}`);
+        this.log.debug(`Dimmer Set Brightness: ${this.device.name} ${level}`);
 
         this.device.set({ state, level });
     };

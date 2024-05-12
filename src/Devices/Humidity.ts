@@ -19,7 +19,7 @@ export class Humidity extends Common implements Device {
     }
 
     public onUpdate(state: DeviceState): void {
-        this.log.debug(`Humidity: ${this.device.name} State: ${state.humidity}`);
+        this.log.debug(`Humidity: ${this.device.name} State: ${state.humidity || 0}`);
 
         this.service.updateCharacteristic(
             this.homebridge.hap.Characteristic.CurrentRelativeHumidity,
@@ -28,7 +28,7 @@ export class Humidity extends Common implements Device {
     }
 
     private onGetState = (): CharacteristicValue => {
-        this.log.debug(`Humidity Get State: ${this.device.name} ${this.device.status.humidity}`);
+        this.log.debug(`Humidity Get State: ${this.device.name} ${this.device.status.humidity || 0}`);
 
         return this.device.status.humidity || 0;
     };

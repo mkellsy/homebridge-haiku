@@ -7,6 +7,7 @@ import { Fan } from "./Devices/Fan";
 import { Dimmer } from "./Devices/Dimmer";
 import { Humidity } from "./Devices/Humidity";
 import { Occupancy } from "./Devices/Occupancy";
+import { Switch } from "./Devices/Switch";
 import { Temperature } from "./Devices/Temperature";
 
 import { Device } from "./Interfaces/Device";
@@ -19,6 +20,9 @@ export abstract class Accessories {
 
             case DeviceType.Dimmer:
                 return new Dimmer(homebridge, device, log);
+
+            case DeviceType.Switch:
+                return new Switch(homebridge, device, log);
 
             case DeviceType.Humidity:
                 return new Humidity(homebridge, device as IKeypad, log);

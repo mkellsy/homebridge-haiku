@@ -82,25 +82,25 @@ export class Fan extends Common implements Device {
         const speed = Math.round(((state.speed || 0) / 7) * 100);
 
         this.log.debug(`Fan: ${this.device.name} State: ${state.state}`);
-        this.log.debug(`Fan: ${this.device.name} Speed: ${state.speed}`);
+        this.log.debug(`Fan: ${this.device.name} Speed: ${state.speed || 0}`);
 
         this.service.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.state === "On");
         this.service.updateCharacteristic(this.homebridge.hap.Characteristic.RotationSpeed, speed);
 
         if (this.device.capabilities.auto) {
-            this.log.debug(`Fan: ${this.device.name} Auto: ${state.auto}`);
+            this.log.debug(`Fan: ${this.device.name} Auto: ${state.auto || "Off"}`);
 
             this.auto?.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.auto === "On");
         }
 
         if (this.device.capabilities.whoosh) {
-            this.log.debug(`Fan: ${this.device.name} Whoosh: ${state.whoosh}`);
+            this.log.debug(`Fan: ${this.device.name} Whoosh: ${state.whoosh || "Off"}`);
 
             this.whoosh?.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.whoosh === "On");
         }
 
         if (this.device.capabilities.eco) {
-            this.log.debug(`Fan: ${this.device.name} Eco: ${state.eco}`);
+            this.log.debug(`Fan: ${this.device.name} Eco: ${state.eco || "Off"}`);
 
             this.eco?.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.eco === "On");
         }
@@ -115,7 +115,7 @@ export class Fan extends Common implements Device {
     private onGetSpeed = (): CharacteristicValue => {
         const speed = Math.round(((this.device.status.speed || 0) / 7) * 100);
 
-        this.log.debug(`Fan Get Speed: ${this.device.name} ${speed}`);
+        this.log.debug(`Fan Get Speed: ${this.device.name} ${this.device.status.speed || 0}`);
 
         return speed;
     };
@@ -133,7 +133,7 @@ export class Fan extends Common implements Device {
     };
 
     private onGetAuto = (): CharacteristicValue => {
-        this.log.debug(`Fan Get Auto: ${this.device.name} ${this.device.status.auto}`);
+        this.log.debug(`Fan Get Auto: ${this.device.name} ${this.device.status.auto || "Off"}`);
 
         return this.device.status.auto === "On";
     };
@@ -145,13 +145,13 @@ export class Fan extends Common implements Device {
         const whoosh = this.device.status.whoosh || "Off";
         const eco = this.device.status.eco || "Off";
 
-        this.log.debug(`Fan Set Auto: ${this.device.name} ${value}`);
+        this.log.debug(`Fan Set Auto: ${this.device.name} ${auto}`);
 
         this.device.set({ state, speed, auto, whoosh, eco });
     };
 
     private onGetWhoosh = (): CharacteristicValue => {
-        this.log.debug(`Fan Get Whoosh: ${this.device.name} ${this.device.status.whoosh}`);
+        this.log.debug(`Fan Get Whoosh: ${this.device.name} ${this.device.status.whoosh || "Off"}`);
 
         return this.device.status.whoosh === "On";
     };
@@ -163,13 +163,13 @@ export class Fan extends Common implements Device {
         const whoosh = value ? "On" : "Off";
         const eco = this.device.status.eco || "Off";
 
-        this.log.debug(`Fan Set Whoosh: ${this.device.name} ${value}`);
+        this.log.debug(`Fan Set Whoosh: ${this.device.name} ${whoosh}`);
 
         this.device.set({ state, speed, auto, whoosh, eco });
     };
 
     private onGetEco = (): CharacteristicValue => {
-        this.log.debug(`Fan Get Eco: ${this.device.name} ${this.device.status.eco}`);
+        this.log.debug(`Fan Get Eco: ${this.device.name} ${this.device.status.eco || "Off"}`);
 
         return this.device.status.eco === "On";
     };
@@ -181,7 +181,7 @@ export class Fan extends Common implements Device {
         const whoosh = this.device.status.whoosh || "Off";
         const eco = value ? "On" : "Off";
 
-        this.log.debug(`Fan Set Eco: ${this.device.name} ${value}`);
+        this.log.debug(`Fan Set Eco: ${this.device.name} ${eco}`);
 
         this.device.set({ state, speed, auto, whoosh, eco });
     };
