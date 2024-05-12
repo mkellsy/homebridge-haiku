@@ -33,7 +33,7 @@ export class Fan extends Common implements Device {
             const control = `${this.device.name} Auto`;
 
             this.auto =
-                this.accessory.getServiceById(this.homebridge.hap.Service.Switch, control) ||
+                this.accessory.getService(control) ||
                 this.accessory.addService(this.homebridge.hap.Service.Switch, control, String(1));
 
             this.auto.setCharacteristic(this.homebridge.hap.Characteristic.Name, "Auto");
@@ -49,7 +49,7 @@ export class Fan extends Common implements Device {
             const control = `${this.device.name} Whoosh`;
 
             this.whoosh =
-                this.accessory.getServiceById(this.homebridge.hap.Service.Switch, control) ||
+                this.accessory.getService(control) ||
                 this.accessory.addService(this.homebridge.hap.Service.Switch, control, String(2));
 
             this.whoosh.setCharacteristic(this.homebridge.hap.Characteristic.Name, "Whoosh");
@@ -65,7 +65,7 @@ export class Fan extends Common implements Device {
             const control = `${this.device.name} Eco`;
 
             this.eco =
-                this.accessory.getServiceById(this.homebridge.hap.Service.Switch, control) ||
+                this.accessory.getService(control) ||
                 this.accessory.addService(this.homebridge.hap.Service.Switch, control, String(3));
 
             this.eco.setCharacteristic(this.homebridge.hap.Characteristic.Name, "Eco");
