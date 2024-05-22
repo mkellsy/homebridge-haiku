@@ -1,5 +1,5 @@
 import { API, Logging } from "homebridge";
-import { DeviceType, Device as IDevice, Keypad as IKeypad } from "@mkellsy/hap-device";
+import { DeviceType, Device as IDevice } from "@mkellsy/hap-device";
 
 import { accessories, devices, platform, plugin } from "./Platform";
 
