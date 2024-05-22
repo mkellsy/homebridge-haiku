@@ -25,7 +25,7 @@ export abstract class Accessories {
                 return new Switch(homebridge, device, log);
 
             case DeviceType.Humidity:
-                return new Humidity(homebridge, device as IKeypad, log);
+                return new Humidity(homebridge, device, log);
 
             case DeviceType.Occupancy:
                 return new Occupancy(homebridge, device, log);
