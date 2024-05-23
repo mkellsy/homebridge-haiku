@@ -24,7 +24,7 @@
         "/lib"
     ],
     "scripts": {
-        "build": "./build",
+        "build": "node ./build",
         "watch": "npm run build && npm link && nodemon",
         "prepublishOnly": "npm run build"
     },
