@@ -1,5 +1,5 @@
 {
-    "version": "1.2.3",
+    "version": "1.2.4",
     "name": "@mkellsy/homebridge-haiku",
     "displayName": "Homebridge Haiku",
     "description": "This is a plugin that exposes Big Ass Fans Haiku and i6 fans to Homebridge.",

@@ -41,7 +41,7 @@ export class Dimmer extends Common implements Device {
     };
 
     private onGetBrightness = (): CharacteristicValue => {
-        const level = (this.device.status.level || 0) * 100;
+        const level = this.device.status.level || 0;
 
         this.log.debug(`Dimmer Get Brightness: ${this.device.name} ${this.device.status.level || 0}`);
 
@@ -49,7 +49,7 @@ export class Dimmer extends Common implements Device {
     };
 
     private onSetBrightness = (value: CharacteristicValue): void => {
-        const level = ((value || 0) as number) / 100;
+        const level = (value || 0) as number;
         const state = level > 0 ? "On" : "Off";
 
         if (this.device.status.state !== state || this.device.status.level !== level) {
