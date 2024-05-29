@@ -1,5 +1,5 @@
 {
-    "version": "1.2.4",
+    "version": "1.2.5",
     "name": "@mkellsy/homebridge-haiku",
     "displayName": "Homebridge Haiku",
     "description": "This is a plugin that exposes Big Ass Fans Haiku and i6 fans to Homebridge.",
@@ -32,8 +32,8 @@
         "homebridge": "^1.8.1"
     },
     "devDependencies": {
-        "@mkellsy/baf-client": "^1.2.4",
-        "@mkellsy/hap-device": "^1.2.1",
+        "@mkellsy/baf-client": "^1.5.2",
+        "@mkellsy/hap-device": "^1.5.2",
         "@types/debug": "^4.1.12",
         "@types/node": "^20.11.0",
         "esbuild": "^0.20.2",
