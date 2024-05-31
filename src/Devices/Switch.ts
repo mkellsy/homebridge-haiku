@@ -29,7 +29,7 @@ export class Switch extends Common implements Device {
     }
 
     private onGetState = (): CharacteristicValue => {
-        this.log.debug(`Switch get state: ${this.device.name} ${this.device.status.state}`);
+        this.log.debug(`Switch Get State: ${this.device.name} ${this.device.status.state}`);
 
         return this.device.status.state === "On";
     };
@@ -38,7 +38,7 @@ export class Switch extends Common implements Device {
         const state = value ? "On" : "Off";
 
         if (this.device.status.state !== state) {
-            this.log.debug(`Switch set state: ${this.device.name} ${state}`);
+            this.log.debug(`Switch Set State: ${this.device.name} ${state}`);
 
             this.device.set({ state });
         }

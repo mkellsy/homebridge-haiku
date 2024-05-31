@@ -19,10 +19,7 @@ export class Fan extends Common implements Device {
             this.accessory.addService(this.homebridge.hap.Service.Fan, this.device.name);
 
         this.service.setCharacteristic(this.homebridge.hap.Characteristic.Name, this.device.name);
-
-        this.service
-            .getCharacteristic(this.homebridge.hap.Characteristic.On)
-            .onGet(this.onGetState);
+        this.service.getCharacteristic(this.homebridge.hap.Characteristic.On).onGet(this.onGetState);
 
         this.service
             .getCharacteristic(this.homebridge.hap.Characteristic.RotationSpeed)
@@ -71,10 +68,7 @@ export class Fan extends Common implements Device {
             this.eco.setCharacteristic(this.homebridge.hap.Characteristic.Name, "Eco");
             this.eco.setCharacteristic(this.homebridge.hap.Characteristic.ConfiguredName, "Eco");
 
-            this.eco
-                .getCharacteristic(this.homebridge.hap.Characteristic.On)
-                .onGet(this.onGetEco)
-                .onSet(this.onSetEco);
+            this.eco.getCharacteristic(this.homebridge.hap.Characteristic.On).onGet(this.onGetEco).onSet(this.onSetEco);
         }
     }
 

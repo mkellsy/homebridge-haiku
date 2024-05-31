@@ -15,7 +15,10 @@ export class Humidity extends Common implements Device {
             this.accessory.addService(this.homebridge.hap.Service.HumiditySensor, this.device.name);
 
         this.service.setCharacteristic(this.homebridge.hap.Characteristic.Name, this.device.name);
-        this.service.getCharacteristic(this.homebridge.hap.Characteristic.CurrentRelativeHumidity).onGet(this.onGetState);
+
+        this.service
+            .getCharacteristic(this.homebridge.hap.Characteristic.CurrentRelativeHumidity)
+            .onGet(this.onGetState);
     }
 
     public onUpdate(state: DeviceState): void {
@@ -23,7 +26,7 @@ export class Humidity extends Common implements Device {
 
         this.service.updateCharacteristic(
             this.homebridge.hap.Characteristic.CurrentRelativeHumidity,
-            state.humidity || 0
+            state.humidity || 0,
         );
     }
 
