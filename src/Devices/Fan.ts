@@ -5,6 +5,9 @@ import { API, CharacteristicValue, Logging, Service } from "homebridge";
 import { Common } from "./Common";
 import { Device } from "../Interfaces/Device";
 
+/**
+ * Creates a fan device.
+ */
 export class Fan extends Common<Baf.Fan> implements Device {
     private service: Service;
 
@@ -12,6 +15,13 @@ export class Fan extends Common<Baf.Fan> implements Device {
     private whoosh?: Service;
     private eco?: Service;
 
+    /**
+     * Creates a fan device.
+     *
+     * @param homebridge A reference to the Homebridge API.
+     * @param device A reference to the discovered device.
+     * @param log A refrence to the Homebridge logger.
+     */
     constructor(homebridge: API, device: Baf.Fan, log: Logging) {
         super(homebridge, device, log);
 
@@ -73,6 +83,11 @@ export class Fan extends Common<Baf.Fan> implements Device {
         }
     }
 
+    /**
+     * Updates Homebridge accessory when an update comes from the device.
+     *
+     * @param state The current fan state.
+     */
     public onUpdate(state: Baf.FanState): void {
         const speed = Math.round((state.speed / 7) * 100);
 
@@ -105,12 +120,22 @@ export class Fan extends Common<Baf.Fan> implements Device {
         }
     }
 
+    /**
+     * Fetches the current state when Homebridge asks for it.
+     *
+     * @returns A characteristic value.
+     */
     private onGetState = (): CharacteristicValue => {
         this.log.debug(`Fan Get State: ${this.device.name} ${this.device.status.state}`);
 
         return this.device.status.state === "On";
     };
 
+    /**
+     * Fetches the current speed when Homebridge asks for it.
+     *
+     * @returns A characteristic value.
+     */
     private onGetSpeed = (): CharacteristicValue => {
         const speed = Math.round((this.device.status.speed / 7) * 100);
 
@@ -119,6 +144,9 @@ export class Fan extends Common<Baf.Fan> implements Device {
         return speed;
     };
 
+    /**
+     * Updates the device speed when a change comes in from Homebridge.
+     */
     private onSetSpeed = async (value: CharacteristicValue): Promise<void> => {
         const speed = Math.round((((value as number) || 0) / 100) * 7);
         const state = speed > 0 ? "On" : "Off";
@@ -136,12 +164,20 @@ export class Fan extends Common<Baf.Fan> implements Device {
         }
     };
 
+    /**
+     * Fetches the current auto state when Homebridge asks for it.
+     *
+     * @returns A characteristic value.
+     */
     private onGetAuto = (): CharacteristicValue => {
         this.log.debug(`Fan Get Auto: ${this.device.name} ${this.device.status.state === "Auto" ? "On" : "Off"}`);
 
         return this.device.status.state === "Auto";
     };
 
+    /**
+     * Updates the device auto state when a change comes in from Homebridge.
+     */
     private onSetAuto = async (value: CharacteristicValue): Promise<void> => {
         const state = value ? "Auto" : "Off";
 
@@ -157,12 +193,20 @@ export class Fan extends Common<Baf.Fan> implements Device {
         }
     };
 
+    /**
+     * Fetches the current whoosh state when Homebridge asks for it.
+     *
+     * @returns A characteristic value.
+     */
     private onGetWhoosh = (): CharacteristicValue => {
         this.log.debug(`Fan Get Whoosh: ${this.device.name} ${this.device.status.whoosh}`);
 
         return this.device.status.whoosh === "On";
     };
 
+    /**
+     * Updates the device whoosh state when a change comes in from Homebridge.
+     */
     private onSetWhoosh = async (value: CharacteristicValue): Promise<void> => {
         const whoosh = value ? "On" : "Off";
 
@@ -178,12 +222,20 @@ export class Fan extends Common<Baf.Fan> implements Device {
         }
     };
 
+    /**
+     * Fetches the current eco state when Homebridge asks for it.
+     *
+     * @returns A characteristic value.
+     */
     private onGetEco = (): CharacteristicValue => {
         this.log.debug(`Fan Get Eco: ${this.device.name} ${this.device.status.eco || "Off"}`);
 
         return this.device.status.eco === "On";
     };
 
+    /**
+     * Updates the device eco state when a change comes in from Homebridge.
+     */
     private onSetEco = async (value: CharacteristicValue): Promise<void> => {
         const eco = value ? "On" : "Off";
 

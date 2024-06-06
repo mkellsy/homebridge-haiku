@@ -5,9 +5,19 @@ import { API, CharacteristicValue, Logging, Service } from "homebridge";
 import { Common } from "./Common";
 import { Device } from "../Interfaces/Device";
 
+/**
+ * Creates a switch device.
+ */
 export class Switch extends Common<Baf.Switch> implements Device {
     private service: Service;
 
+    /**
+     * Creates a switch device.
+     *
+     * @param homebridge A reference to the Homebridge API.
+     * @param device A reference to the discovered device.
+     * @param log A refrence to the Homebridge logger.
+     */
     constructor(homebridge: API, device: Baf.Switch, log: Logging) {
         super(homebridge, device, log);
 
@@ -23,18 +33,31 @@ export class Switch extends Common<Baf.Switch> implements Device {
             .onSet(this.onSetState);
     }
 
+    /**
+     * Updates Homebridge accessory when an update comes from the device.
+     *
+     * @param state The current switch state.
+     */
     public onUpdate(state: Baf.SwitchState): void {
         this.log.debug(`Switch: ${this.device.name} state: ${state.state}`);
 
         this.service.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.state === "On");
     }
 
+    /**
+     * Fetches the current state when Homebridge asks for it.
+     *
+     * @returns A characteristic value.
+     */
     private onGetState = (): CharacteristicValue => {
         this.log.debug(`Switch Get State: ${this.device.name} ${this.device.status.state}`);
 
         return this.device.status.state === "On";
     };
 
+    /**
+     * Updates the device when a change comes in from Homebridge.
+     */
     private onSetState = async (value: CharacteristicValue): Promise<void> => {
         const state = value ? "On" : "Off";
 
