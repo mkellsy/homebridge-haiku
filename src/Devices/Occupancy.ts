@@ -1,13 +1,14 @@
+import * as Baf from "@mkellsy/baf-client";
+
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
-import { DeviceState, Occupancy as IOccupancy } from "@mkellsy/hap-device";
 
 import { Common } from "./Common";
 import { Device } from "../Interfaces/Device";
 
-export class Occupancy extends Common implements Device {
+export class Occupancy extends Common<Baf.Occupancy> implements Device {
     private service: Service;
 
-    constructor(homebridge: API, device: IOccupancy, log: Logging) {
+    constructor(homebridge: API, device: Baf.Occupancy, log: Logging) {
         super(homebridge, device, log);
 
         this.service =
@@ -18,7 +19,7 @@ export class Occupancy extends Common implements Device {
         this.service.getCharacteristic(this.homebridge.hap.Characteristic.OccupancyDetected).onGet(this.onGetState);
     }
 
-    public onUpdate(state: DeviceState): void {
+    public onUpdate(state: Baf.OccupancyState): void {
         this.log.debug(
             `Occupancy: ${this.device.name} State: ${state.state === "Occupied" ? "Detected" : "Not Detected"}`,
         );

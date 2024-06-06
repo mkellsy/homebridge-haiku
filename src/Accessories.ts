@@ -1,3 +1,5 @@
+import * as Baf from "@mkellsy/baf-client";
+
 import { API, Logging } from "homebridge";
 import { DeviceType, Device as IDevice } from "@mkellsy/hap-device";
 
@@ -16,22 +18,22 @@ export abstract class Accessories {
     public static create(homebridge: API, device: IDevice, log: Logging): Device | undefined {
         switch (device.type) {
             case DeviceType.Fan:
-                return new Fan(homebridge, device, log);
+                return new Fan(homebridge, device as Baf.Fan, log);
 
             case DeviceType.Dimmer:
-                return new Dimmer(homebridge, device, log);
+                return new Dimmer(homebridge, device as Baf.Dimmer, log);
 
             case DeviceType.Switch:
-                return new Switch(homebridge, device, log);
+                return new Switch(homebridge, device as Baf.Switch, log);
 
             case DeviceType.Humidity:
-                return new Humidity(homebridge, device, log);
+                return new Humidity(homebridge, device as Baf.Humidity, log);
 
             case DeviceType.Occupancy:
-                return new Occupancy(homebridge, device, log);
+                return new Occupancy(homebridge, device as Baf.Occupancy, log);
 
             case DeviceType.Temperature:
-                return new Temperature(homebridge, device, log);
+                return new Temperature(homebridge, device as Baf.Temperature, log);
         }
 
         return undefined;

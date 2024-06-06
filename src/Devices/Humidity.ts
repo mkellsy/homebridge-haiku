@@ -1,13 +1,14 @@
+import * as Baf from "@mkellsy/baf-client";
+
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
-import { DeviceState, Humidity as IHumidity } from "@mkellsy/hap-device";
 
 import { Common } from "./Common";
 import { Device } from "../Interfaces/Device";
 
-export class Humidity extends Common implements Device {
+export class Humidity extends Common<Baf.Humidity> implements Device {
     private service: Service;
 
-    constructor(homebridge: API, device: IHumidity, log: Logging) {
+    constructor(homebridge: API, device: Baf.Humidity, log: Logging) {
         super(homebridge, device, log);
 
         this.service =
@@ -21,18 +22,15 @@ export class Humidity extends Common implements Device {
             .onGet(this.onGetState);
     }
 
-    public onUpdate(state: DeviceState): void {
-        this.log.debug(`Humidity: ${this.device.name} State: ${state.humidity || 0}`);
+    public onUpdate(state: Baf.HumidityState): void {
+        this.log.debug(`Humidity: ${this.device.name} State: ${state.humidity}`);
 
-        this.service.updateCharacteristic(
-            this.homebridge.hap.Characteristic.CurrentRelativeHumidity,
-            state.humidity || 0,
-        );
+        this.service.updateCharacteristic(this.homebridge.hap.Characteristic.CurrentRelativeHumidity, state.humidity);
     }
 
     private onGetState = (): CharacteristicValue => {
-        this.log.debug(`Humidity Get State: ${this.device.name} ${this.device.status.humidity || 0}`);
+        this.log.debug(`Humidity Get State: ${this.device.name} ${this.device.status.humidity}`);
 
-        return this.device.status.humidity || 0;
+        return this.device.status.humidity;
     };
 }

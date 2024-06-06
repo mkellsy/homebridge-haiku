@@ -1,13 +1,14 @@
+import * as Baf from "@mkellsy/baf-client";
+
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
-import { DeviceState, Switch as ISwitch } from "@mkellsy/hap-device";
 
 import { Common } from "./Common";
 import { Device } from "../Interfaces/Device";
 
-export class Switch extends Common implements Device {
+export class Switch extends Common<Baf.Switch> implements Device {
     private service: Service;
 
-    constructor(homebridge: API, device: ISwitch, log: Logging) {
+    constructor(homebridge: API, device: Baf.Switch, log: Logging) {
         super(homebridge, device, log);
 
         this.service =
@@ -22,7 +23,7 @@ export class Switch extends Common implements Device {
             .onSet(this.onSetState);
     }
 
-    public onUpdate(state: DeviceState): void {
+    public onUpdate(state: Baf.SwitchState): void {
         this.log.debug(`Switch: ${this.device.name} state: ${state.state}`);
 
         this.service.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.state === "On");

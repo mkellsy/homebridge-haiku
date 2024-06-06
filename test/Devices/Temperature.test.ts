@@ -119,12 +119,6 @@ describe("Temperature", () => {
 
             expect(accessoryStub.updateCharacteristic).to.be.calledWith("CurrentTemperature", 30);
         });
-
-        it("should default the emperature to zero", () => {
-            temperature.onUpdate({ state: "Auto" });
-
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("CurrentTemperature", 0);
-        });
     });
 
     describe("onGetState()", () => {
@@ -143,12 +137,6 @@ describe("Temperature", () => {
             deviceStub.status = { state: "Auto", temprature: 30 };
 
             expect(stateStub.callbacks["Get"]()).to.equal(30);
-        });
-
-        it("should default the value to zero", () => {
-            deviceStub.status = { state: "Auto" };
-
-            expect(stateStub.callbacks["Get"]()).to.equal(0);
         });
     });
 });

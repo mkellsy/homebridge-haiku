@@ -1,17 +1,18 @@
+import * as Baf from "@mkellsy/baf-client";
+
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
-import { DeviceState, Fan as IFan } from "@mkellsy/hap-device";
 
 import { Common } from "./Common";
 import { Device } from "../Interfaces/Device";
 
-export class Fan extends Common implements Device {
+export class Fan extends Common<Baf.Fan> implements Device {
     private service: Service;
 
     private auto?: Service;
     private whoosh?: Service;
     private eco?: Service;
 
-    constructor(homebridge: API, device: IFan, log: Logging) {
+    constructor(homebridge: API, device: Baf.Fan, log: Logging) {
         super(homebridge, device, log);
 
         this.service =
@@ -72,23 +73,27 @@ export class Fan extends Common implements Device {
         }
     }
 
-    public onUpdate(state: DeviceState): void {
-        const speed = Math.round(((state.speed || 0) / 7) * 100);
+    public onUpdate(state: Baf.FanState): void {
+        const speed = Math.round((state.speed / 7) * 100);
 
         this.log.debug(`Fan: ${this.device.name} State: ${state.state}`);
-        this.log.debug(`Fan: ${this.device.name} Speed: ${state.speed || 0}`);
+        this.log.debug(`Fan: ${this.device.name} Speed: ${state.speed}`);
 
-        this.service.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.state === "On");
+        this.service.updateCharacteristic(
+            this.homebridge.hap.Characteristic.On,
+            state.state === "On" || state.state === "Auto",
+        );
+
         this.service.updateCharacteristic(this.homebridge.hap.Characteristic.RotationSpeed, speed);
 
         if (this.device.capabilities.auto) {
-            this.log.debug(`Fan: ${this.device.name} Auto: ${state.auto || "Off"}`);
+            this.log.debug(`Fan: ${this.device.name} Auto: ${state.state === "Auto" ? "On" : "Off"}`);
 
-            this.auto?.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.auto === "On");
+            this.auto?.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.state === "Auto");
         }
 
         if (this.device.capabilities.whoosh) {
-            this.log.debug(`Fan: ${this.device.name} Whoosh: ${state.whoosh || "Off"}`);
+            this.log.debug(`Fan: ${this.device.name} Whoosh: ${state.whoosh}`);
 
             this.whoosh?.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.whoosh === "On");
         }
@@ -107,9 +112,9 @@ export class Fan extends Common implements Device {
     };
 
     private onGetSpeed = (): CharacteristicValue => {
-        const speed = Math.round(((this.device.status.speed || 0) / 7) * 100);
+        const speed = Math.round((this.device.status.speed / 7) * 100);
 
-        this.log.debug(`Fan Get Speed: ${this.device.name} ${this.device.status.speed || 0}`);
+        this.log.debug(`Fan Get Speed: ${this.device.name} ${this.device.status.speed}`);
 
         return speed;
     };
@@ -117,55 +122,59 @@ export class Fan extends Common implements Device {
     private onSetSpeed = async (value: CharacteristicValue): Promise<void> => {
         const speed = Math.round((((value as number) || 0) / 100) * 7);
         const state = speed > 0 ? "On" : "Off";
-        const auto = "Off";
-        const whoosh = this.device.status.whoosh || "Off";
-        const eco = this.device.status.eco || "Off";
 
         if (this.device.status.state !== state || this.device.status.speed !== speed) {
             this.log.debug(`Fan Set State: ${this.device.name} ${state}`);
             this.log.debug(`Fan Set Speed: ${this.device.name} ${speed}`);
 
-            await this.device.set({ state, speed, auto, whoosh, eco });
+            await this.device.set({
+                state,
+                speed,
+                whoosh: this.device.status.whoosh,
+                eco: this.device.status.eco || "Off",
+            });
         }
     };
 
     private onGetAuto = (): CharacteristicValue => {
-        this.log.debug(`Fan Get Auto: ${this.device.name} ${this.device.status.auto || "Off"}`);
+        this.log.debug(`Fan Get Auto: ${this.device.name} ${this.device.status.state === "Auto" ? "On" : "Off"}`);
 
-        return this.device.status.auto === "On";
+        return this.device.status.state === "Auto";
     };
 
     private onSetAuto = async (value: CharacteristicValue): Promise<void> => {
-        const state = this.device.status.state;
-        const speed = this.device.status.speed || 0;
-        const auto = value ? "On" : "Off";
-        const whoosh = this.device.status.whoosh || "Off";
-        const eco = this.device.status.eco || "Off";
+        const state = value ? "Auto" : "Off";
 
-        if (this.device.status.auto !== auto) {
-            this.log.debug(`Fan Set Auto: ${this.device.name} ${auto}`);
+        if (this.device.status.state !== state) {
+            this.log.debug(`Fan Set State: ${this.device.name} ${state}`);
 
-            await this.device.set({ state, speed, auto, whoosh, eco });
+            await this.device.set({
+                state,
+                speed: this.device.status.speed,
+                whoosh: this.device.status.whoosh,
+                eco: this.device.status.eco || "Off",
+            });
         }
     };
 
     private onGetWhoosh = (): CharacteristicValue => {
-        this.log.debug(`Fan Get Whoosh: ${this.device.name} ${this.device.status.whoosh || "Off"}`);
+        this.log.debug(`Fan Get Whoosh: ${this.device.name} ${this.device.status.whoosh}`);
 
         return this.device.status.whoosh === "On";
     };
 
     private onSetWhoosh = async (value: CharacteristicValue): Promise<void> => {
-        const state = this.device.status.state;
-        const speed = this.device.status.speed || 0;
-        const auto = "Off";
         const whoosh = value ? "On" : "Off";
-        const eco = this.device.status.eco || "Off";
 
         if (this.device.status.whoosh !== whoosh) {
             this.log.debug(`Fan Set Whoosh: ${this.device.name} ${whoosh}`);
 
-            await this.device.set({ state, speed, auto, whoosh, eco });
+            await this.device.set({
+                state: this.device.status.state as "On" | "Off" | "Auto",
+                speed: this.device.status.speed,
+                whoosh,
+                eco: this.device.status.eco || "Off",
+            });
         }
     };
 
@@ -176,16 +185,17 @@ export class Fan extends Common implements Device {
     };
 
     private onSetEco = async (value: CharacteristicValue): Promise<void> => {
-        const state = this.device.status.state;
-        const speed = this.device.status.speed || 0;
-        const auto = "Off";
-        const whoosh = this.device.status.whoosh || "Off";
         const eco = value ? "On" : "Off";
 
         if (this.device.status.eco !== eco) {
             this.log.debug(`Fan Set Eco: ${this.device.name} ${eco}`);
 
-            await this.device.set({ state, speed, auto, whoosh, eco });
+            await this.device.set({
+                state: this.device.status.state as "On" | "Off" | "Auto",
+                speed: this.device.status.speed,
+                whoosh: this.device.status.whoosh,
+                eco,
+            });
         }
     };
 }

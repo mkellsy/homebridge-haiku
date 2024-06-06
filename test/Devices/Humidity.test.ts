@@ -118,12 +118,6 @@ describe("Humidity", () => {
 
             expect(accessoryStub.updateCharacteristic).to.be.calledWith("CurrentRelativeHumidity", 40);
         });
-
-        it("should default the humidity to zero", () => {
-            humidity.onUpdate({ state: "Auto" });
-
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("CurrentRelativeHumidity", 0);
-        });
     });
 
     describe("onGetState()", () => {
@@ -142,12 +136,6 @@ describe("Humidity", () => {
             deviceStub.status = { state: "Auto", humidity: 30 };
 
             expect(stateStub.callbacks["Get"]()).to.equal(30);
-        });
-
-        it("should default the value to zero", () => {
-            deviceStub.status = { state: "Auto" };
-
-            expect(stateStub.callbacks["Get"]()).to.equal(0);
         });
     });
 });

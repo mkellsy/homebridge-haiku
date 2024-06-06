@@ -298,7 +298,7 @@ describe("Fan", () => {
 
         it("should update the state to on", () => {
             fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "On", speed: 7 });
+            fan.onUpdate({ state: "On", speed: 7, whoosh: "Off" });
 
             expect(accessoryStub.updateCharacteristic).to.be.calledWith("On", true);
             expect(accessoryStub.updateCharacteristic).to.be.calledWith("RotationSpeed", 100);
@@ -306,17 +306,9 @@ describe("Fan", () => {
 
         it("should update the state to off", () => {
             fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "Off", speed: 0 });
+            fan.onUpdate({ state: "Off", speed: 0, whoosh: "Off" });
 
             expect(accessoryStub.updateCharacteristic).to.be.calledWith("On", false);
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("RotationSpeed", 0);
-        });
-
-        it("should default the speed to zero", () => {
-            fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "On" });
-
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("On", true);
             expect(accessoryStub.updateCharacteristic).to.be.calledWith("RotationSpeed", 0);
         });
 
@@ -328,22 +320,9 @@ describe("Fan", () => {
             };
 
             fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "On", auto: "On" });
+            fan.onUpdate({ state: "Auto", speed: 4, whoosh: "Off" });
 
             expect(autoAccessoryStub.updateCharacteristic).to.be.calledWith("On", true);
-        });
-
-        it("should default auto to off", () => {
-            deviceStub.capabilities = {
-                auto: true,
-                whoosh: true,
-                eco: true,
-            };
-
-            fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "On" });
-
-            expect(autoAccessoryStub.updateCharacteristic).to.be.calledWith("On", false);
         });
 
         it("should not update auto if capabilities change after setup", () => {
@@ -355,7 +334,7 @@ describe("Fan", () => {
                 eco: true,
             };
 
-            fan.onUpdate({ state: "On", auto: "On" });
+            fan.onUpdate({ state: "On", speed: 4, whoosh: "Off" });
 
             expect(autoAccessoryStub.updateCharacteristic).to.not.be.called;
         });
@@ -368,22 +347,9 @@ describe("Fan", () => {
             };
 
             fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "On", whoosh: "On" });
+            fan.onUpdate({ state: "On", speed: 4, whoosh: "On" });
 
             expect(whooshAccessoryStub.updateCharacteristic).to.be.calledWith("On", true);
-        });
-
-        it("should default whoosh to off", () => {
-            deviceStub.capabilities = {
-                auto: true,
-                whoosh: true,
-                eco: true,
-            };
-
-            fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "On" });
-
-            expect(whooshAccessoryStub.updateCharacteristic).to.be.calledWith("On", false);
         });
 
         it("should not update whoosh if capabilities change after setup", () => {
@@ -395,7 +361,7 @@ describe("Fan", () => {
                 eco: true,
             };
 
-            fan.onUpdate({ state: "On", whoosh: "On" });
+            fan.onUpdate({ state: "On", speed: 4, whoosh: "On" });
 
             expect(whooshAccessoryStub.updateCharacteristic).to.not.be.called;
         });
@@ -408,7 +374,7 @@ describe("Fan", () => {
             };
 
             fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "On", eco: "On" });
+            fan.onUpdate({ state: "On", speed: 4, whoosh: "Off", eco: "On" });
 
             expect(ecoAccessoryStub.updateCharacteristic).to.be.calledWith("On", true);
         });
@@ -421,7 +387,7 @@ describe("Fan", () => {
             };
 
             fan = new Fan(homebridgeStub, deviceStub, logStub);
-            fan.onUpdate({ state: "On" });
+            fan.onUpdate({ state: "On", speed: 4, whoosh: "Off" });
 
             expect(ecoAccessoryStub.updateCharacteristic).to.be.calledWith("On", false);
         });
@@ -435,7 +401,7 @@ describe("Fan", () => {
                 eco: true,
             };
 
-            fan.onUpdate({ state: "On", eco: "On" });
+            fan.onUpdate({ state: "On", speed: 4, whoosh: "Off", eco: "On" });
 
             expect(ecoAccessoryStub.updateCharacteristic).to.not.be.called;
         });
@@ -485,12 +451,6 @@ describe("Fan", () => {
 
             expect(speedStub.callbacks["Get"]()).to.equal(0);
         });
-
-        it("should default the speed to zero", () => {
-            deviceStub.status = { state: "Off" };
-
-            expect(speedStub.callbacks["Get"]()).to.equal(0);
-        });
     });
 
     describe("onSetSpeed()", () => {
@@ -536,7 +496,7 @@ describe("Fan", () => {
             getServiceStub.withArgs("NAME Eco").returns(ecoAccessoryStub);
 
             deviceStub.capabilities = { auto: true };
-            deviceStub.status = { state: "On", speed: 3, auto: "Off" };
+            deviceStub.status = { state: "On", speed: 3 };
 
             fan = new Fan(homebridgeStub, deviceStub, logStub);
         });
@@ -546,15 +506,9 @@ describe("Fan", () => {
         });
 
         it("should return the current auto state after an update", () => {
-            deviceStub.status = { state: "Off", auto: "On" };
+            deviceStub.status = { state: "Auto" };
 
             expect(autoStub.callbacks["Get"]()).to.equal(true);
-        });
-
-        it("should default the auto state to off", () => {
-            deviceStub.status = { state: "Off" };
-
-            expect(autoStub.callbacks["Get"]()).to.equal(false);
         });
     });
 
@@ -576,22 +530,23 @@ describe("Fan", () => {
         it("should update the device auto state to on", () => {
             autoStub.callbacks["Set"](true);
 
-            expect(logStub.debug).to.be.calledWith("Fan Set Auto: NAME On");
+            expect(logStub.debug).to.be.calledWith("Fan Set State: NAME Auto");
         });
 
         it("should update the device auto state to off", () => {
-            deviceStub.status.auto = "On";
+            deviceStub.status.state = "Auto";
             deviceStub.status.speed = undefined;
 
             autoStub.callbacks["Set"](false);
 
-            expect(logStub.debug).to.be.calledWith("Fan Set Auto: NAME Off");
+            expect(logStub.debug).to.be.calledWith("Fan Set State: NAME Off");
         });
 
         it("should not update the auto state if the values is the same", () => {
+            deviceStub.status.state = "Off";
             autoStub.callbacks["Set"](false);
 
-            expect(logStub.debug).to.not.be.calledWith("Fan Set Auto: NAME Off");
+            expect(logStub.debug).to.not.be.calledWith("Fan Set State: NAME Off");
         });
     });
 
@@ -618,12 +573,6 @@ describe("Fan", () => {
             deviceStub.status = { state: "Off", whoosh: "On" };
 
             expect(whooshStub.callbacks["Get"]()).to.equal(true);
-        });
-
-        it("should default the whoosh state to off", () => {
-            deviceStub.status = { state: "Off" };
-
-            expect(whooshStub.callbacks["Get"]()).to.equal(false);
         });
     });
 

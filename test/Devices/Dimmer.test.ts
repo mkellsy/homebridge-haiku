@@ -157,13 +157,6 @@ describe("Dimmer", () => {
             expect(accessoryStub.updateCharacteristic).to.be.calledWith("On", false);
             expect(accessoryStub.updateCharacteristic).to.be.calledWith("Brightness", 0);
         });
-
-        it("should default the level to zero", () => {
-            dimmer.onUpdate({ state: "On" });
-
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("On", true);
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("Brightness", 0);
-        });
     });
 
     describe("onGetState()", () => {
@@ -199,12 +192,6 @@ describe("Dimmer", () => {
 
         it("should return the current state after an update", () => {
             deviceStub.status = { state: "Off", level: 0 };
-
-            expect(levelStub.callbacks["Get"]()).to.equal(0);
-        });
-
-        it("should default the level to zero", () => {
-            deviceStub.status = { state: "Off" };
 
             expect(levelStub.callbacks["Get"]()).to.equal(0);
         });

@@ -1,13 +1,14 @@
+import * as Baf from "@mkellsy/baf-client";
+
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
-import { DeviceState, Dimmer as IDimmer } from "@mkellsy/hap-device";
 
 import { Common } from "./Common";
 import { Device } from "../Interfaces/Device";
 
-export class Dimmer extends Common implements Device {
+export class Dimmer extends Common<Baf.Dimmer> implements Device {
     private service: Service;
 
-    constructor(homebridge: API, device: IDimmer, log: Logging) {
+    constructor(homebridge: API, device: Baf.Dimmer, log: Logging) {
         super(homebridge, device, log);
 
         this.service =
@@ -23,12 +24,12 @@ export class Dimmer extends Common implements Device {
             .onSet(this.onSetBrightness);
     }
 
-    public onUpdate(state: DeviceState): void {
+    public onUpdate(state: Baf.DimmerState): void {
         this.log.debug(`Dimmer: ${this.device.name} State: ${state.state}`);
-        this.log.debug(`Dimmer: ${this.device.name} Brightness: ${state.level || 0}`);
+        this.log.debug(`Dimmer: ${this.device.name} Brightness: ${state.level}`);
 
         this.service.updateCharacteristic(this.homebridge.hap.Characteristic.On, state.state === "On");
-        this.service.updateCharacteristic(this.homebridge.hap.Characteristic.Brightness, state.level || 0);
+        this.service.updateCharacteristic(this.homebridge.hap.Characteristic.Brightness, state.level);
     }
 
     private onGetState = (): CharacteristicValue => {
@@ -38,11 +39,9 @@ export class Dimmer extends Common implements Device {
     };
 
     private onGetBrightness = (): CharacteristicValue => {
-        const level = this.device.status.level || 0;
+        this.log.debug(`Dimmer Get Brightness: ${this.device.name} ${this.device.status.level}`);
 
-        this.log.debug(`Dimmer Get Brightness: ${this.device.name} ${this.device.status.level || 0}`);
-
-        return level;
+        return this.device.status.level;
     };
 
     private onSetBrightness = async (value: CharacteristicValue): Promise<void> => {
