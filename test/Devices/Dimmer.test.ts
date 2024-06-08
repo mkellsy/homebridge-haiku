@@ -178,6 +178,37 @@ describe("Dimmer", () => {
         });
     });
 
+    describe("onSetState()", () => {
+        beforeEach(() => {
+            serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
+            serviceStub.withArgs("LightBulb").returns(accessoryStub);
+
+            dimmer = new Dimmer(homebridgeStub, deviceStub, logStub);
+        });
+
+        it("should update the device state to off", () => {
+            stateStub.callbacks["Set"](false);
+
+            expect(logStub.debug).to.be.calledWith("Dimmer Set State: NAME Off");
+            expect(logStub.debug).to.be.calledWith("Dimmer Set Brightness: NAME 0");
+        });
+
+        it("should update the device state to on", () => {
+            deviceStub.status = { state: "Off" };
+            stateStub.callbacks["Set"](true);
+
+            expect(logStub.debug).to.be.calledWith("Dimmer Set State: NAME On");
+            expect(logStub.debug).to.be.calledWith("Dimmer Set Brightness: NAME 100");
+        });
+
+        it("should not update the device if the values is the same", () => {
+            deviceStub.status = { state: "On", level: 100 };
+            stateStub.callbacks["Set"](true);
+
+            expect(logStub.debug).to.not.be.calledWith("Switch Set State: NAME On");
+        });
+    });
+
     describe("onGetBrightness()", () => {
         beforeEach(() => {
             serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);

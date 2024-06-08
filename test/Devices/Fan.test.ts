@@ -430,6 +430,41 @@ describe("Fan", () => {
         });
     });
 
+    describe("onSetState()", () => {
+        beforeEach(() => {
+            getServiceStub.withArgs("AccessoryInformation").returns(accessoryStub);
+            getServiceStub.withArgs("Fan").returns(accessoryStub);
+
+            getServiceStub.withArgs("NAME Auto").returns(autoAccessoryStub);
+            getServiceStub.withArgs("NAME Whoosh").returns(whooshAccessoryStub);
+            getServiceStub.withArgs("NAME Eco").returns(ecoAccessoryStub);
+
+            fan = new Fan(homebridgeStub, deviceStub, logStub);
+        });
+
+        it("should update the device state to off", () => {
+            stateStub.callbacks["Set"](false);
+
+            expect(logStub.debug).to.be.calledWith("Fan Set State: NAME Off");
+            expect(logStub.debug).to.be.calledWith("Fan Set Speed: NAME 0");
+        });
+
+        it("should update the device state to on", () => {
+            deviceStub.status = { state: "Off" };
+            stateStub.callbacks["Set"](true);
+
+            expect(logStub.debug).to.be.calledWith("Fan Set State: NAME On");
+            expect(logStub.debug).to.be.calledWith("Fan Set Speed: NAME 7");
+        });
+
+        it("should not update the device if the values is the same", () => {
+            deviceStub.status = { state: "On", speed: 7 };
+            stateStub.callbacks["Set"](true);
+
+            expect(logStub.debug).to.not.be.calledWith("Fan Set State: NAME On");
+        });
+    });
+
     describe("onGetSpeed()", () => {
         beforeEach(() => {
             getServiceStub.withArgs("AccessoryInformation").returns(accessoryStub);

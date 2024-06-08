@@ -28,7 +28,7 @@ export class Platform implements DynamicPlatformPlugin {
      * @param config A reference to this plugin's config.
      * @param homebridge A reference to the Homebridge API.
      */
-    constructor(log: Logging, _config: PlatformConfig, homebridge: API) {
+    constructor(log: Logging, config: PlatformConfig, homebridge: API) {
         this.log = log;
         this.homebridge = homebridge;
 

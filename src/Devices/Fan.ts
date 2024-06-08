@@ -30,7 +30,11 @@ export class Fan extends Common<Baf.Fan> implements Device {
             this.accessory.addService(this.homebridge.hap.Service.Fan, this.device.name);
 
         this.service.setCharacteristic(this.homebridge.hap.Characteristic.Name, this.device.name);
-        this.service.getCharacteristic(this.homebridge.hap.Characteristic.On).onGet(this.onGetState);
+
+        this.service
+            .getCharacteristic(this.homebridge.hap.Characteristic.On)
+            .onGet(this.onGetState)
+            .onSet(this.onSetState);
 
         this.service
             .getCharacteristic(this.homebridge.hap.Characteristic.RotationSpeed)
@@ -129,6 +133,26 @@ export class Fan extends Common<Baf.Fan> implements Device {
         this.log.debug(`Fan Get State: ${this.device.name} ${this.device.status.state}`);
 
         return this.device.status.state === "On";
+    };
+
+    /**
+     * Updates the device when a change comes in from Homebridge.
+     */
+    private onSetState = async (value: CharacteristicValue): Promise<void> => {
+        const state = value ? "On" : "Off";
+        const speed = value ? 7 : 0;
+
+        if (this.device.status.state !== state || this.device.status.speed !== speed) {
+            this.log.debug(`Fan Set State: ${this.device.name} ${state}`);
+            this.log.debug(`Fan Set Speed: ${this.device.name} ${speed}`);
+
+            await this.device.set({
+                state,
+                speed,
+                whoosh: this.device.status.whoosh,
+                eco: this.device.status.eco || "Off",
+            });
+        }
     };
 
     /**
