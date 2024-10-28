@@ -7,6 +7,7 @@ import { Device } from "../Interfaces/Device";
 
 /**
  * Creates a humidity sensor device.
+ * @public
  */
 export class Humidity extends Common<Baf.Humidity> implements Device {
     private service: Service;

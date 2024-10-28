@@ -7,6 +7,7 @@ import { Device } from "../Interfaces/Device";
 
 /**
  * Creates a temperature sensor device.
+ * @public
  */
 export class Temperature extends Common<Baf.Temperature> implements Device {
     private service: Service;

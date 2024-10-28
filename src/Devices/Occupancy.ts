@@ -7,6 +7,7 @@ import { Device } from "../Interfaces/Device";
 
 /**
  * Creates an occupancy sensor device.
+ * @public
  */
 export class Occupancy extends Common<Baf.Occupancy> implements Device {
     private service: Service;

@@ -3,6 +3,7 @@ import { DeviceState } from "@mkellsy/hap-device";
 
 /**
  * Shared device interface for Homebridge accessories
+ * @public
  */
 export interface Device {
     /**

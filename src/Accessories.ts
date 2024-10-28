@@ -16,6 +16,7 @@ import { Device } from "./Interfaces/Device";
 
 /**
  * Accessory factory.
+ * @public
  */
 export abstract class Accessories {
     /**

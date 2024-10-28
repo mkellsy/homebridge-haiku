@@ -16,6 +16,7 @@ export { accessories, devices, platform, plugin };
 
 /**
  * Impliments a Homebridge platform plugin.
+ * @public
  */
 export class Platform implements DynamicPlatformPlugin {
     private readonly log: Logging;

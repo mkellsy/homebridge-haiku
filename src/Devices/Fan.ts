@@ -7,6 +7,7 @@ import { Device } from "../Interfaces/Device";
 
 /**
  * Creates a fan device.
+ * @public
  */
 export class Fan extends Common<Baf.Fan> implements Device {
     private service: Service;
