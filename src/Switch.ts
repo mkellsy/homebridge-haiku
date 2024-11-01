@@ -3,7 +3,7 @@ import * as Baf from "@mkellsy/baf-client";
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
 
 import { Common } from "./Common";
-import { Device } from "../Interfaces/Device";
+import { Device } from "./Device";
 
 /**
  * Creates a switch device.
@@ -58,6 +58,8 @@ export class Switch extends Common<Baf.Switch> implements Device {
 
     /**
      * Updates the device when a change comes in from Homebridge.
+     *
+     * @param value The characteristic value from Homebrtidge.
      */
     private onSetState = async (value: CharacteristicValue): Promise<void> => {
         const state = value ? "On" : "Off";

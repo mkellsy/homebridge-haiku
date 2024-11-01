@@ -3,11 +3,11 @@ import sinon from "sinon";
 import sinonChai from "sinon-chai";
 
 import { DeviceType } from "@mkellsy/hap-device";
-import { Temperature } from "../../src/Devices/Temperature";
+import { Humidity } from "../src/Humidity";
 
 chai.use(sinonChai);
 
-describe("Temperature", () => {
+describe("Humidity", () => {
     let homebridgeStub: any;
     let serviceStub: any;
     let deviceStub: any;
@@ -17,7 +17,7 @@ describe("Temperature", () => {
     let stateStub: any;
     let accessoryStub: any;
 
-    let temperature: Temperature;
+    let humidity: Humidity;
 
     beforeEach(() => {
         logStub = {
@@ -33,13 +33,13 @@ describe("Temperature", () => {
             },
             Service: {
                 AccessoryInformation: "AccessoryInformation",
-                TemperatureSensor: "TemperatureSensor",
+                HumiditySensor: "HumiditySensor",
             },
             Characteristic: {
                 Model: "Model",
                 Manufacturer: "Manufacturer",
                 SerialNumber: "SerialNumber",
-                CurrentTemperature: "CurrentTemperature",
+                CurrentRelativeHumidity: "CurrentRelativeHumidity",
             },
         };
 
@@ -60,7 +60,7 @@ describe("Temperature", () => {
         };
 
         accessoryStub.setCharacteristic.returns(accessoryStub);
-        accessoryStub.getCharacteristic.withArgs("CurrentTemperature").returns(stateStub);
+        accessoryStub.getCharacteristic.withArgs("CurrentRelativeHumidity").returns(stateStub);
         serviceStub = sinon.stub();
 
         homebridgeStub = {
@@ -78,10 +78,10 @@ describe("Temperature", () => {
         };
 
         deviceStub = {
-            id: "ID_TEMPERATURE",
+            id: "ID_HUMIDITY",
             name: "NAME",
-            type: DeviceType.Temperature,
-            status: { state: "Auto", temprature: 20 },
+            type: DeviceType.Humidity,
+            status: { state: "Auto", humidity: 40 },
             update: sinon.stub(),
             set: sinon.stub(),
             capabilities: {},
@@ -90,18 +90,17 @@ describe("Temperature", () => {
 
     it("should bind listeners when device is created", () => {
         serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-        serviceStub.withArgs("TemperatureSensor").returns(undefined);
 
-        temperature = new Temperature(homebridgeStub, deviceStub, logStub);
+        humidity = new Humidity(homebridgeStub, deviceStub, logStub);
 
         expect(stateStub.callbacks["Get"]).to.not.be.undefined;
     });
 
     it("should bind listeners when device is created from cache", () => {
         serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-        serviceStub.withArgs("TemperatureSensor").returns(accessoryStub);
+        serviceStub.withArgs("HumiditySensor").returns(accessoryStub);
 
-        temperature = new Temperature(homebridgeStub, deviceStub, logStub);
+        humidity = new Humidity(homebridgeStub, deviceStub, logStub);
 
         expect(stateStub.callbacks["Get"]).to.not.be.undefined;
     });
@@ -109,32 +108,32 @@ describe("Temperature", () => {
     describe("onUpdate()", () => {
         beforeEach(() => {
             serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-            serviceStub.withArgs("TemperatureSensor").returns(accessoryStub);
+            serviceStub.withArgs("HumiditySensor").returns(accessoryStub);
 
-            temperature = new Temperature(homebridgeStub, deviceStub, logStub);
+            humidity = new Humidity(homebridgeStub, deviceStub, logStub);
         });
 
-        it("should update the temperature", () => {
-            temperature.onUpdate({ state: "Auto", temprature: 30 });
+        it("should update the humidity", () => {
+            humidity.onUpdate({ state: "Auto", humidity: 40 });
 
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("CurrentTemperature", 30);
+            expect(accessoryStub.updateCharacteristic).to.be.calledWith("CurrentRelativeHumidity", 40);
         });
     });
 
     describe("onGetState()", () => {
         beforeEach(() => {
             serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-            serviceStub.withArgs("TemperatureSensor").returns(accessoryStub);
+            serviceStub.withArgs("HumiditySensor").returns(accessoryStub);
 
-            temperature = new Temperature(homebridgeStub, deviceStub, logStub);
+            humidity = new Humidity(homebridgeStub, deviceStub, logStub);
         });
 
-        it("should return the current temperature of the device", () => {
-            expect(stateStub.callbacks["Get"]()).to.equal(20);
+        it("should return the current humidity of the device", () => {
+            expect(stateStub.callbacks["Get"]()).to.equal(40);
         });
 
-        it("should return the current temperature after an update", () => {
-            deviceStub.status = { state: "Auto", temprature: 30 };
+        it("should return the current humidity after an update", () => {
+            deviceStub.status = { state: "Auto", humidity: 30 };
 
             expect(stateStub.callbacks["Get"]()).to.equal(30);
         });

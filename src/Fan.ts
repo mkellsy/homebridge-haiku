@@ -3,7 +3,7 @@ import * as Baf from "@mkellsy/baf-client";
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
 
 import { Common } from "./Common";
-import { Device } from "../Interfaces/Device";
+import { Device } from "./Device";
 
 /**
  * Creates a fan device.
@@ -138,6 +138,8 @@ export class Fan extends Common<Baf.Fan> implements Device {
 
     /**
      * Updates the device when a change comes in from Homebridge.
+     *
+     * @param value The characteristic value from Homebrtidge.
      */
     private onSetState = async (value: CharacteristicValue): Promise<void> => {
         const state = value ? "On" : "Off";
@@ -171,6 +173,8 @@ export class Fan extends Common<Baf.Fan> implements Device {
 
     /**
      * Updates the device speed when a change comes in from Homebridge.
+     *
+     * @param value The characteristic value from Homebrtidge.
      */
     private onSetSpeed = async (value: CharacteristicValue): Promise<void> => {
         const speed = Math.round((((value as number) || 0) / 100) * 7);
@@ -202,6 +206,8 @@ export class Fan extends Common<Baf.Fan> implements Device {
 
     /**
      * Updates the device auto state when a change comes in from Homebridge.
+     *
+     * @param value The characteristic value from Homebrtidge.
      */
     private onSetAuto = async (value: CharacteristicValue): Promise<void> => {
         const state = value ? "Auto" : "Off";
@@ -231,6 +237,8 @@ export class Fan extends Common<Baf.Fan> implements Device {
 
     /**
      * Updates the device whoosh state when a change comes in from Homebridge.
+     *
+     * @param value The characteristic value from Homebrtidge.
      */
     private onSetWhoosh = async (value: CharacteristicValue): Promise<void> => {
         const whoosh = value ? "On" : "Off";
@@ -260,6 +268,8 @@ export class Fan extends Common<Baf.Fan> implements Device {
 
     /**
      * Updates the device eco state when a change comes in from Homebridge.
+     *
+     * @param value The characteristic value from Homebrtidge.
      */
     private onSetEco = async (value: CharacteristicValue): Promise<void> => {
         const eco = value ? "On" : "Off";

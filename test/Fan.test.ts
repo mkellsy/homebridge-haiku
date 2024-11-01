@@ -3,7 +3,7 @@ import sinon from "sinon";
 import sinonChai from "sinon-chai";
 
 import { DeviceType } from "@mkellsy/hap-device";
-import { Fan } from "../../src/Devices/Fan";
+import { Fan } from "../src/Fan";
 
 chai.use(sinonChai);
 

@@ -3,7 +3,7 @@ import * as Baf from "@mkellsy/baf-client";
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
 
 import { Common } from "./Common";
-import { Device } from "../Interfaces/Device";
+import { Device } from "./Device";
 
 /**
  * Creates a dimmer device.
@@ -65,6 +65,8 @@ export class Dimmer extends Common<Baf.Dimmer> implements Device {
 
     /**
      * Updates the device when a change comes in from Homebridge.
+     *
+     * @param value The characteristic value from Homebrtidge.
      */
     private onSetState = async (value: CharacteristicValue): Promise<void> => {
         const state = value ? "On" : "Off";
@@ -91,6 +93,8 @@ export class Dimmer extends Common<Baf.Dimmer> implements Device {
 
     /**
      * Updates the device when a change comes in from Homebridge.
+     *
+     * @param value The characteristic value from Homebrtidge.
      */
     private onSetBrightness = async (value: CharacteristicValue): Promise<void> => {
         const level = (value || 0) as number;

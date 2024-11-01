@@ -3,11 +3,11 @@ import sinon from "sinon";
 import sinonChai from "sinon-chai";
 
 import { DeviceType } from "@mkellsy/hap-device";
-import { Humidity } from "../../src/Devices/Humidity";
+import { Occupancy } from "../src/Occupancy";
 
 chai.use(sinonChai);
 
-describe("Humidity", () => {
+describe("Occupancy", () => {
     let homebridgeStub: any;
     let serviceStub: any;
     let deviceStub: any;
@@ -17,7 +17,7 @@ describe("Humidity", () => {
     let stateStub: any;
     let accessoryStub: any;
 
-    let humidity: Humidity;
+    let occupancy: Occupancy;
 
     beforeEach(() => {
         logStub = {
@@ -33,13 +33,13 @@ describe("Humidity", () => {
             },
             Service: {
                 AccessoryInformation: "AccessoryInformation",
-                HumiditySensor: "HumiditySensor",
+                OccupancySensor: "OccupancySensor",
             },
             Characteristic: {
                 Model: "Model",
                 Manufacturer: "Manufacturer",
                 SerialNumber: "SerialNumber",
-                CurrentRelativeHumidity: "CurrentRelativeHumidity",
+                OccupancyDetected: "OccupancyDetected",
             },
         };
 
@@ -60,7 +60,7 @@ describe("Humidity", () => {
         };
 
         accessoryStub.setCharacteristic.returns(accessoryStub);
-        accessoryStub.getCharacteristic.withArgs("CurrentRelativeHumidity").returns(stateStub);
+        accessoryStub.getCharacteristic.withArgs("OccupancyDetected").returns(stateStub);
         serviceStub = sinon.stub();
 
         homebridgeStub = {
@@ -78,10 +78,10 @@ describe("Humidity", () => {
         };
 
         deviceStub = {
-            id: "ID_HUMIDITY",
+            id: "ID_OCCUPANCY",
             name: "NAME",
-            type: DeviceType.Humidity,
-            status: { state: "Auto", humidity: 40 },
+            type: DeviceType.Occupancy,
+            status: { state: "Occupied" },
             update: sinon.stub(),
             set: sinon.stub(),
             capabilities: {},
@@ -90,17 +90,18 @@ describe("Humidity", () => {
 
     it("should bind listeners when device is created", () => {
         serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
+        serviceStub.withArgs("OccupancySensor").returns(undefined);
 
-        humidity = new Humidity(homebridgeStub, deviceStub, logStub);
+        occupancy = new Occupancy(homebridgeStub, deviceStub, logStub);
 
         expect(stateStub.callbacks["Get"]).to.not.be.undefined;
     });
 
     it("should bind listeners when device is created from cache", () => {
         serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-        serviceStub.withArgs("HumiditySensor").returns(accessoryStub);
+        serviceStub.withArgs("OccupancySensor").returns(accessoryStub);
 
-        humidity = new Humidity(homebridgeStub, deviceStub, logStub);
+        occupancy = new Occupancy(homebridgeStub, deviceStub, logStub);
 
         expect(stateStub.callbacks["Get"]).to.not.be.undefined;
     });
@@ -108,34 +109,40 @@ describe("Humidity", () => {
     describe("onUpdate()", () => {
         beforeEach(() => {
             serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-            serviceStub.withArgs("HumiditySensor").returns(accessoryStub);
+            serviceStub.withArgs("OccupancySensor").returns(accessoryStub);
 
-            humidity = new Humidity(homebridgeStub, deviceStub, logStub);
+            occupancy = new Occupancy(homebridgeStub, deviceStub, logStub);
         });
 
-        it("should update the humidity", () => {
-            humidity.onUpdate({ state: "Auto", humidity: 40 });
+        it("should update the occupancy to true", () => {
+            occupancy.onUpdate({ state: "Occupied" });
 
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("CurrentRelativeHumidity", 40);
+            expect(accessoryStub.updateCharacteristic).to.be.calledWith("OccupancyDetected", true);
+        });
+
+        it("should update the occupancy to false", () => {
+            occupancy.onUpdate({ state: "Unoccupied" });
+
+            expect(accessoryStub.updateCharacteristic).to.be.calledWith("OccupancyDetected", false);
         });
     });
 
     describe("onGetState()", () => {
         beforeEach(() => {
             serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-            serviceStub.withArgs("HumiditySensor").returns(accessoryStub);
+            serviceStub.withArgs("OccupancySensor").returns(accessoryStub);
 
-            humidity = new Humidity(homebridgeStub, deviceStub, logStub);
+            occupancy = new Occupancy(homebridgeStub, deviceStub, logStub);
         });
 
-        it("should return the current humidity of the device", () => {
-            expect(stateStub.callbacks["Get"]()).to.equal(40);
+        it("should return the current occupancy of the device", () => {
+            expect(stateStub.callbacks["Get"]()).to.equal(true);
         });
 
-        it("should return the current humidity after an update", () => {
-            deviceStub.status = { state: "Auto", humidity: 30 };
+        it("should return the current occupancy after an update", () => {
+            deviceStub.status = { state: "Unoccupied" };
 
-            expect(stateStub.callbacks["Get"]()).to.equal(30);
+            expect(stateStub.callbacks["Get"]()).to.equal(false);
         });
     });
 });

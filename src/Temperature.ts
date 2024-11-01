@@ -3,7 +3,7 @@ import * as Baf from "@mkellsy/baf-client";
 import { API, CharacteristicValue, Logging, Service } from "homebridge";
 
 import { Common } from "./Common";
-import { Device } from "../Interfaces/Device";
+import { Device } from "./Device";
 
 /**
  * Creates a temperature sensor device.

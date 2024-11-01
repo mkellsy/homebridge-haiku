@@ -3,11 +3,11 @@ import sinon from "sinon";
 import sinonChai from "sinon-chai";
 
 import { DeviceType } from "@mkellsy/hap-device";
-import { Occupancy } from "../../src/Devices/Occupancy";
+import { Temperature } from "../src/Temperature";
 
 chai.use(sinonChai);
 
-describe("Occupancy", () => {
+describe("Temperature", () => {
     let homebridgeStub: any;
     let serviceStub: any;
     let deviceStub: any;
@@ -17,7 +17,7 @@ describe("Occupancy", () => {
     let stateStub: any;
     let accessoryStub: any;
 
-    let occupancy: Occupancy;
+    let temperature: Temperature;
 
     beforeEach(() => {
         logStub = {
@@ -33,13 +33,13 @@ describe("Occupancy", () => {
             },
             Service: {
                 AccessoryInformation: "AccessoryInformation",
-                OccupancySensor: "OccupancySensor",
+                TemperatureSensor: "TemperatureSensor",
             },
             Characteristic: {
                 Model: "Model",
                 Manufacturer: "Manufacturer",
                 SerialNumber: "SerialNumber",
-                OccupancyDetected: "OccupancyDetected",
+                CurrentTemperature: "CurrentTemperature",
             },
         };
 
@@ -60,7 +60,7 @@ describe("Occupancy", () => {
         };
 
         accessoryStub.setCharacteristic.returns(accessoryStub);
-        accessoryStub.getCharacteristic.withArgs("OccupancyDetected").returns(stateStub);
+        accessoryStub.getCharacteristic.withArgs("CurrentTemperature").returns(stateStub);
         serviceStub = sinon.stub();
 
         homebridgeStub = {
@@ -78,10 +78,10 @@ describe("Occupancy", () => {
         };
 
         deviceStub = {
-            id: "ID_OCCUPANCY",
+            id: "ID_TEMPERATURE",
             name: "NAME",
-            type: DeviceType.Occupancy,
-            status: { state: "Occupied" },
+            type: DeviceType.Temperature,
+            status: { state: "Auto", temprature: 20 },
             update: sinon.stub(),
             set: sinon.stub(),
             capabilities: {},
@@ -90,18 +90,18 @@ describe("Occupancy", () => {
 
     it("should bind listeners when device is created", () => {
         serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-        serviceStub.withArgs("OccupancySensor").returns(undefined);
+        serviceStub.withArgs("TemperatureSensor").returns(undefined);
 
-        occupancy = new Occupancy(homebridgeStub, deviceStub, logStub);
+        temperature = new Temperature(homebridgeStub, deviceStub, logStub);
 
         expect(stateStub.callbacks["Get"]).to.not.be.undefined;
     });
 
     it("should bind listeners when device is created from cache", () => {
         serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-        serviceStub.withArgs("OccupancySensor").returns(accessoryStub);
+        serviceStub.withArgs("TemperatureSensor").returns(accessoryStub);
 
-        occupancy = new Occupancy(homebridgeStub, deviceStub, logStub);
+        temperature = new Temperature(homebridgeStub, deviceStub, logStub);
 
         expect(stateStub.callbacks["Get"]).to.not.be.undefined;
     });
@@ -109,40 +109,34 @@ describe("Occupancy", () => {
     describe("onUpdate()", () => {
         beforeEach(() => {
             serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-            serviceStub.withArgs("OccupancySensor").returns(accessoryStub);
+            serviceStub.withArgs("TemperatureSensor").returns(accessoryStub);
 
-            occupancy = new Occupancy(homebridgeStub, deviceStub, logStub);
+            temperature = new Temperature(homebridgeStub, deviceStub, logStub);
         });
 
-        it("should update the occupancy to true", () => {
-            occupancy.onUpdate({ state: "Occupied" });
+        it("should update the temperature", () => {
+            temperature.onUpdate({ state: "Auto", temprature: 30 });
 
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("OccupancyDetected", true);
-        });
-
-        it("should update the occupancy to false", () => {
-            occupancy.onUpdate({ state: "Unoccupied" });
-
-            expect(accessoryStub.updateCharacteristic).to.be.calledWith("OccupancyDetected", false);
+            expect(accessoryStub.updateCharacteristic).to.be.calledWith("CurrentTemperature", 30);
         });
     });
 
     describe("onGetState()", () => {
         beforeEach(() => {
             serviceStub.withArgs("AccessoryInformation").returns(accessoryStub);
-            serviceStub.withArgs("OccupancySensor").returns(accessoryStub);
+            serviceStub.withArgs("TemperatureSensor").returns(accessoryStub);
 
-            occupancy = new Occupancy(homebridgeStub, deviceStub, logStub);
+            temperature = new Temperature(homebridgeStub, deviceStub, logStub);
         });
 
-        it("should return the current occupancy of the device", () => {
-            expect(stateStub.callbacks["Get"]()).to.equal(true);
+        it("should return the current temperature of the device", () => {
+            expect(stateStub.callbacks["Get"]()).to.equal(20);
         });
 
-        it("should return the current occupancy after an update", () => {
-            deviceStub.status = { state: "Unoccupied" };
+        it("should return the current temperature after an update", () => {
+            deviceStub.status = { state: "Auto", temprature: 30 };
 
-            expect(stateStub.callbacks["Get"]()).to.equal(false);
+            expect(stateStub.callbacks["Get"]()).to.equal(30);
         });
     });
 });

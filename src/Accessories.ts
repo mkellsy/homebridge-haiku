@@ -5,14 +5,14 @@ import { DeviceType, Device as IDevice } from "@mkellsy/hap-device";
 
 import { accessories, devices, platform, plugin } from "./Platform";
 
-import { Fan } from "./Devices/Fan";
-import { Dimmer } from "./Devices/Dimmer";
-import { Humidity } from "./Devices/Humidity";
-import { Occupancy } from "./Devices/Occupancy";
-import { Switch } from "./Devices/Switch";
-import { Temperature } from "./Devices/Temperature";
+import { Fan } from "./Fan";
+import { Dimmer } from "./Dimmer";
+import { Humidity } from "./Humidity";
+import { Occupancy } from "./Occupancy";
+import { Switch } from "./Switch";
+import { Temperature } from "./Temperature";
 
-import { Device } from "./Interfaces/Device";
+import { Device } from "./Device";
 
 /**
  * Accessory factory.

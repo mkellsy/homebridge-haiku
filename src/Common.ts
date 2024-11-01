@@ -1,7 +1,7 @@
 import { API, Logging, PlatformAccessory } from "homebridge";
 import { Device } from "@mkellsy/hap-device";
 
-import { accessories, devices, platform, plugin } from "../Platform";
+import { accessories, devices, platform, plugin } from "./Platform";
 
 /**
  * Defines common functionallity for a device.

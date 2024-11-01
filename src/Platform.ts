@@ -4,7 +4,7 @@ import { API, DynamicPlatformPlugin, Logging, PlatformAccessory, PlatformConfig 
 import { Device as IDevice, DeviceState } from "@mkellsy/hap-device";
 
 import { Accessories } from "./Accessories";
-import { Device } from "./Interfaces/Device";
+import { Device } from "./Device";
 
 const accessories: Map<string, PlatformAccessory> = new Map();
 const devices: Map<string, Device> = new Map();

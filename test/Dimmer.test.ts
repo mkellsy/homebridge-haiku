@@ -3,7 +3,7 @@ import sinon from "sinon";
 import sinonChai from "sinon-chai";
 
 import { DeviceType } from "@mkellsy/hap-device";
-import { Dimmer } from "../../src/Devices/Dimmer";
+import { Dimmer } from "../src/Dimmer";
 
 chai.use(sinonChai);
 

@@ -3,7 +3,7 @@ import sinon from "sinon";
 import sinonChai from "sinon-chai";
 
 import { DeviceType } from "@mkellsy/hap-device";
-import { Switch } from "../../src/Devices/Switch";
+import { Switch } from "../src/Switch";
 
 chai.use(sinonChai);
 
