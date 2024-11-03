@@ -7,7 +7,7 @@ import { Device } from "./Device";
 
 /**
  * Creates a switch device.
- * @public
+ * @private
  */
 export class Switch extends Common<Baf.Switch> implements Device {
     private service: Service;

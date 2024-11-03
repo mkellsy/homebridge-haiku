@@ -7,7 +7,7 @@ import { Device } from "./Device";
 
 /**
  * Creates a dimmer device.
- * @public
+ * @private
  */
 export class Dimmer extends Common<Baf.Dimmer> implements Device {
     private service: Service;

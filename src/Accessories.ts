@@ -16,7 +16,7 @@ import { Device } from "./Device";
 
 /**
  * Accessory factory.
- * @public
+ * @private
  */
 export abstract class Accessories {
     /**

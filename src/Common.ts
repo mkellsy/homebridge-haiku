@@ -5,7 +5,7 @@ import { accessories, devices, platform, plugin } from "./Platform";
 
 /**
  * Defines common functionallity for a device.
- * @public
+ * @private
  */
 export abstract class Common<DEVICE extends Device> {
     public readonly id: string;
