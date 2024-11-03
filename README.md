@@ -18,4 +18,4 @@ This plugin doesn't require any configuration other than the platform to work.
 
 ## Support
 
-I offer not support for this plugin, it is published only for personal use.
+I offer no support for this plugin, it is published only for personal use.
