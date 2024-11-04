@@ -1,0 +1,15 @@
+{
+    "pluginAlias": "Cliffside",
+    "pluginType": "platform",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Plugin Name",
+                "default": "Haiku",
+                "required": true
+            }
+        }
+    }
+}
