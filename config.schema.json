@@ -1,6 +1,7 @@
 {
-    "pluginAlias": "Cliffside",
+    "pluginAlias": "Haiku",
     "pluginType": "platform",
+    "singular": true,
     "schema": {
         "type": "object",
         "properties": {
