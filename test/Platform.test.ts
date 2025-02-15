@@ -1,4 +1,4 @@
-import { proxy, registerNode } from "proxyrequire";
+import proxyquire from "proxyquire";
 
 import chai, { expect } from "chai";
 import sinon from "sinon";
@@ -8,7 +8,6 @@ import { DeviceType } from "@mkellsy/hap-device";
 import { Platform } from "../src/Platform";
 
 chai.use(sinonChai);
-registerNode();
 
 describe("Platform", () => {
     let homebridgeStub: any;
@@ -31,7 +30,7 @@ describe("Platform", () => {
     };
 
     before(() => {
-        platformType = proxy(() => require("../src/Platform").Platform, {
+        platformType = proxyquire("../src/Platform", {
             "@mkellsy/baf-client": {
                 connect() {
                     return {
@@ -47,7 +46,7 @@ describe("Platform", () => {
                     };
                 },
             },
-        });
+        }).Platform;
     });
 
     beforeEach(() => {
