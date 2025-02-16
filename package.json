@@ -1,5 +1,5 @@
 {
-    "version": "1.7.10",
+    "version": "1.7.11",
     "name": "@mkellsy/homebridge-haiku",
     "displayName": "Homebridge Haiku",
     "description": "This is a plugin that exposes Big Ass Fans Haiku and i6 fans to Homebridge.",
@@ -33,7 +33,7 @@
         "prepublishOnly": "npm run build"
     },
     "peerDependencies": {
-        "homebridge": "^1.8.5"
+        "homebridge": ">=1.8.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.2.0",
