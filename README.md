@@ -2,19 +2,14 @@
 
 This is a plugin that exposes Big Ass Fans Haiku and i6 fans to Homebridge.
 
-## Configuration
+## Getting Started
 
-This plugin doesn't require any configuration other than the platform to work.
+This plugin supports both the Homebridge UI and CLI. You can install and configure depending on your needs.
+-   **[Getting Started](https://github.com/mkellsy/homebridge-haiku/blob/main/docs/ui.md)**
+-   **[Getting Started (Manual)](https://github.com/mkellsy/homebridge-haiku/blob/main/docs/cli.md)**
 
-```json
-{
-    "platforms": [
-        {
-            "platform": "Haiku"
-        }
-    ]
-}
-```
+## Storage
+This plugin has its own storage folder. Each file is explained in the **[storage](https://github.com/mkellsy/homebridge-haiku/blob/main/docs/storage.md)** documentation.
 
 ## Support
 
