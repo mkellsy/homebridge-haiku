@@ -50,6 +50,7 @@ export class Fan extends Common<Baf.Fan> implements Device {
                 this.accessory.addService(this.homebridge.hap.Service.Switch, control, String(1));
 
             this.auto.setCharacteristic(this.homebridge.hap.Characteristic.Name, "Auto");
+            this.auto.addCharacteristic(this.homebridge.hap.Characteristic.ConfiguredName);
             this.auto.setCharacteristic(this.homebridge.hap.Characteristic.ConfiguredName, "Auto");
 
             this.auto
@@ -66,6 +67,7 @@ export class Fan extends Common<Baf.Fan> implements Device {
                 this.accessory.addService(this.homebridge.hap.Service.Switch, control, String(2));
 
             this.whoosh.setCharacteristic(this.homebridge.hap.Characteristic.Name, "Whoosh");
+            this.whoosh.addCharacteristic(this.homebridge.hap.Characteristic.ConfiguredName);
             this.whoosh.setCharacteristic(this.homebridge.hap.Characteristic.ConfiguredName, "Whoosh");
 
             this.whoosh
@@ -82,6 +84,7 @@ export class Fan extends Common<Baf.Fan> implements Device {
                 this.accessory.addService(this.homebridge.hap.Service.Switch, control, String(3));
 
             this.eco.setCharacteristic(this.homebridge.hap.Characteristic.Name, "Eco");
+            this.eco.addCharacteristic(this.homebridge.hap.Characteristic.ConfiguredName);
             this.eco.setCharacteristic(this.homebridge.hap.Characteristic.ConfiguredName, "Eco");
 
             this.eco.getCharacteristic(this.homebridge.hap.Characteristic.On).onGet(this.onGetEco).onSet(this.onSetEco);

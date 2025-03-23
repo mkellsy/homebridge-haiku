@@ -138,24 +138,28 @@ describe("Fan", () => {
         };
 
         accessoryStub = {
+            addCharacteristic: sinon.stub(),
             setCharacteristic: sinon.stub(),
             getCharacteristic: sinon.stub(),
             updateCharacteristic: sinon.stub(),
         };
 
         ecoAccessoryStub = {
+            addCharacteristic: sinon.stub(),
             setCharacteristic: sinon.stub(),
             getCharacteristic: sinon.stub(),
             updateCharacteristic: sinon.stub(),
         };
 
         autoAccessoryStub = {
+            addCharacteristic: sinon.stub(),
             setCharacteristic: sinon.stub(),
             getCharacteristic: sinon.stub(),
             updateCharacteristic: sinon.stub(),
         };
 
         whooshAccessoryStub = {
+            addCharacteristic: sinon.stub(),
             setCharacteristic: sinon.stub(),
             getCharacteristic: sinon.stub(),
             updateCharacteristic: sinon.stub(),
