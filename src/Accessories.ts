@@ -1,7 +1,7 @@
+import * as HAP from "@mkellsy/hap-device";
 import * as Baf from "@mkellsy/baf-client";
 
 import { API, Logging } from "homebridge";
-import { DeviceType, Device as IDevice } from "@mkellsy/hap-device";
 
 import { accessories, devices, platform, plugin } from "./Platform";
 
@@ -28,24 +28,24 @@ export abstract class Accessories {
      *
      * @returns A device or undefined if not configured.
      */
-    public static create(homebridge: API, device: IDevice, log: Logging): Device | undefined {
+    public static create(homebridge: API, device: HAP.Device, log: Logging): Device | undefined {
         switch (device.type) {
-            case DeviceType.Fan:
+            case HAP.DeviceType.Fan:
                 return new Fan(homebridge, device as Baf.Fan, log);
 
-            case DeviceType.Dimmer:
+            case HAP.DeviceType.Dimmer:
                 return new Dimmer(homebridge, device as Baf.Dimmer, log);
 
-            case DeviceType.Switch:
+            case HAP.DeviceType.Switch:
                 return new Switch(homebridge, device as Baf.Switch, log);
 
-            case DeviceType.Humidity:
+            case HAP.DeviceType.Humidity:
                 return new Humidity(homebridge, device as Baf.Humidity, log);
 
-            case DeviceType.Occupancy:
+            case HAP.DeviceType.Occupancy:
                 return new Occupancy(homebridge, device as Baf.Occupancy, log);
 
-            case DeviceType.Temperature:
+            case HAP.DeviceType.Temperature:
                 return new Temperature(homebridge, device as Baf.Temperature, log);
         }
 
@@ -60,7 +60,7 @@ export abstract class Accessories {
      *
      * @returns The cached device or undefined if not available.
      */
-    public static get(homebridge: API, device: IDevice): Device | undefined {
+    public static get(homebridge: API, device: HAP.Device): Device | undefined {
         const id = homebridge.hap.uuid.generate(device.id);
 
         return devices.get(id);
@@ -72,7 +72,7 @@ export abstract class Accessories {
      * @param homebridge A reference to the Homebridge API.
      * @param device A reference to the common device object.
      */
-    public static remove(homebridge: API, device: IDevice): void {
+    public static remove(homebridge: API, device: HAP.Device): void {
         const id = homebridge.hap.uuid.generate(device.id);
         const accessory = accessories.get(id);
 

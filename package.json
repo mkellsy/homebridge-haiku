@@ -30,11 +30,12 @@
     },
     "scripts": {
         "build": "npm run format && npm run lint && npm run test && node ./build",
+        "release": "node ./build release",
         "lint": "eslint ./src/*.ts",
         "format": "prettier --write .",
         "test": "nyc mocha test/*.test.ts test/**/*.test.ts",
         "watch": "node ./build && npm link && nodemon",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run release"
     },
     "peerDependencies": {
         "homebridge": ">=1.8.0"

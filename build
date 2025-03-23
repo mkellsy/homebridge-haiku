@@ -15,7 +15,7 @@ logger.setDefaults({ useDefaults: true });
 const options = {
     bundle: true,
     minify: true,
-    sourcemap: true,
+    sourcemap: (process.argv[2] || "").toLowerCase() !== "release",
     target: "es6",
     platform: "node",
     external: ["homebridge"],
